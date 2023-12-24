@@ -1,0 +1,12 @@
+{
+    "allow_loading_dataset_files": false,
+    "max_user_string_length": 100,
+    "preloaded_dataset_filename": "/llm_transparency_tool/server/sample_input.txt",
+    "debug": false,
+    "models": {
+        "": null,
+        "facebook/opt-125m": "/models/opt-125m",
+        "gpt2": "/models/gpt2"
+    },
+    "default_model": ""
+}
