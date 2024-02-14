@@ -1,0 +1,77 @@
+/**
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+.graph-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.svg {
+    border: 1px solid #ccc;
+}
+
+.layer-highlight {
+    fill: #f0f5f0;
+}
+
+.selectable-item {
+    stroke: black;
+    cursor: pointer;
+}
+
+.selection,
+.selection:hover {
+    fill: orange;
+}
+
+.active-residual-node {
+    fill: yellowgreen;
+}
+
+.active-residual-node:hover {
+    fill: olivedrab;
+}
+
+.active-ffn-node {
+    fill: orchid;
+}
+
+.active-ffn-node:hover {
+    fill: purple;
+}
+
+.inactive-node {
+    fill: lightgray;
+    stroke-width: 0.5px;
+}
+
+.inactive-node:hover {
+    fill: gray;
+}
+
+.selectable-edge {
+    cursor: pointer;
+}
+
+.token-selector {
+    fill: lightblue;
+}
+
+.token-selector:hover {
+    fill: cornflowerblue;
+}
+
+.selector-item {
+    fill: lightblue;
+}
+
+.selector-item:hover {
+    fill: cornflowerblue;
+}

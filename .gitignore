@@ -1,0 +1,7 @@
+**/frontend/node_modules*
+**/frontend/build/
+**/frontend/.yarn*
+.vscode/
+.mypy_cache/
+__pycache__/
+.DS_Store

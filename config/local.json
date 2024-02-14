@@ -1,0 +1,47 @@
+{
+    "allow_loading_dataset_files": true,
+    "preloaded_dataset_filename": "sample_input.txt",
+    "debug": true,
+    "models": {
+        "": null,
+
+        "gpt2": null,
+        "distilgpt2": null,
+        "facebook/opt-125m": null,
+        "facebook/opt-1.3b": null,
+        "EleutherAI/gpt-neo-125M": null,
+        "Qwen/Qwen-1_8B": null,
+        "Qwen/Qwen1.5-0.5B": null,
+        "Qwen/Qwen1.5-0.5B-Chat": null,
+        "Qwen/Qwen1.5-1.8B": null,
+        "Qwen/Qwen1.5-1.8B-Chat": null,
+        "microsoft/phi-1": null,
+        "microsoft/phi-1_5": null,
+        "microsoft/phi-2": null,
+
+        "meta-llama/Llama-2-7b-hf": null,
+        "meta-llama/Llama-2-7b-chat-hf": null,
+
+        "meta-llama/Llama-2-13b-hf": null,
+        "meta-llama/Llama-2-13b-chat-hf": null,
+
+
+        "gpt2-medium": null,
+        "gpt2-large": null,
+        "gpt2-xl": null,
+
+        "mistralai/Mistral-7B-v0.1": null,
+        "mistralai/Mistral-7B-Instruct-v0.1": null,
+        "mistralai/Mistral-7B-Instruct-v0.2": null,
+
+        "google/gemma-7b": null,
+        "google/gemma-2b": null,
+
+        "facebook/opt-2.7b": null,
+        "facebook/opt-6.7b": null,
+        "facebook/opt-13b": null,
+        "facebook/opt-30b": null
+    },
+    "default_model": "",
+    "demo_mode": false
+}

@@ -1,0 +1,13 @@
+{
+    "allow_loading_dataset_files": false,
+    "max_user_string_length": 100,
+    "preloaded_dataset_filename": "sample_input.txt",
+    "debug": false,
+    "demo_mode": true,
+    "models": {
+        "facebook/opt-125m": null,
+        "gpt2": null,
+        "distilgpt2": null
+    },
+    "default_model": "gpt2"
+}

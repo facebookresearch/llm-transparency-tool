@@ -1,0 +1,25 @@
+{
+    "allow_loading_dataset_files": true,
+    "preloaded_dataset_filename": "sample_input.txt",
+    "debug": true,
+    "models": {
+        "": null,
+        "facebook/opt-125m": null,
+        "facebook/opt-1.3b": null,
+        "facebook/opt-2.7b": null,
+        "facebook/opt-6.7b": null,
+        "facebook/opt-13b": null,
+        "facebook/opt-30b": null,
+        "meta-llama/Llama-2-7b-hf": null,
+        "meta-llama/Llama-2-7b-chat-hf": null,
+        "meta-llama/Llama-2-13b-hf": null,
+        "meta-llama/Llama-2-13b-chat-hf": null,
+        "gpt2": null,
+        "gpt2-medium": null,
+        "gpt2-large": null,
+        "gpt2-xl": null,
+        "distilgpt2": null
+    },
+    "default_model": "distilgpt2",
+    "demo_mode": false
+}
