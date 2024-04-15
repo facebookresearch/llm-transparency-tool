@@ -1,5 +1,5 @@
 <h1>
-  <img width="500" alt="LLM Transparency Tool" src="https://github.com/facebookresearch/llm-transparency-tool/assets/1367529/4bbf2544-88de-4576-9622-6047a056c5c8">
+  <img width="500" alt="LLM Transparency Tool" src="https://github.com/facebookresearch/llm-transparency-tool/assets/1367529/795233be-5ef7-4523-8282-67486cf2e15f">
 </h1>
 
 <img width="832" alt="screenshot" src="https://github.com/facebookresearch/llm-transparency-tool/assets/1367529/78f6f9e2-fe76-4ded-bb78-a57f64f4ac3a">
