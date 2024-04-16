@@ -82,7 +82,28 @@ In this case the UI wouldn't know how to create proper hooks for the model. You'
 to implement your version of [TransparentLlm](./llm_transparency_tool/models/transparent_llm.py#L28) class and alter the
 Streamlit app to use your implementation.
 
+## Citation
+If you use the LLM Transparency Tool for your research, please consider citing:
+
+```bibtex
+@article{tufanov2024lm,
+      title={LM Transparency Tool: Interactive Tool for Analyzing Transformer Language Models}, 
+      author={Igor Tufanov and Karen Hambardzumyan and Javier Ferrando and Elena Voita},
+      year={2024},
+      journal={Arxiv},
+      url={https://arxiv.org/abs/2404.07004}
+}
+
+@article{ferrando2024information,
+    title={Information Flow Routes: Automatically Interpreting Language Models at Scale}, 
+    author={Javier Ferrando and Elena Voita},
+    year={2024},
+    journal={Arxiv},
+    url={https://arxiv.org/abs/2403.00824}
+}
+````
 
 ## License
+
 This code is made available under a [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/) license, as found in the LICENSE file.
 However you may have other legal obligations that govern your use of other content, such as the terms of service for third-party models.
