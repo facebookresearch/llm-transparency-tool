@@ -34,7 +34,7 @@ class GraphNode:
         Get another graph node which points to the state of the residual stream before
         this node.
 
-        Retun None if current representation is the first one in the residual stream.
+        Return None if current representation is the first one in the residual stream.
         """
         scheme = {
             NodeType.AFTER_ATTN: GraphNode(
