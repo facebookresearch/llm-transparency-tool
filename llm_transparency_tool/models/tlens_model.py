@@ -229,7 +229,7 @@ class TransformerLensTransparentLlm(TransparentLlm):
         # Take activations right before they're multiplied by W_out, i.e. non-linearity
         # and layer norm are already applied.
         processed_activations = self._get_block(layer, "mlp.hook_post")[batch_i][pos]
-        return torch.mul(processed_activations.unsqueeze(-1), self._model.W_out[layer])
+        return torch.mul(processed_activations.unsqueeze(-1), self._model.blocks[layer].mlp.W_out)
 
     @typechecked
     def neuron_activations(
@@ -246,7 +246,7 @@ class TransformerLensTransparentLlm(TransparentLlm):
         layer: int,
         neuron: int,
     ) -> Float[torch.Tensor, "d_model"]:
-        return self._model.W_out[layer][neuron]
+        return self._model.blocks[layer].mlp.W_out[neuron]
 
     # ==================== Methods related to the attention ====================
 
@@ -283,7 +283,12 @@ class TransformerLensTransparentLlm(TransparentLlm):
         if not self._last_run:
             raise self._run_exception
         hook_v = self._get_block(layer, "attn.hook_v")[batch_i]
-        b_v = self._model.b_V[layer]
+        b_v = self._model.blocks[layer].attn.b_V
+
+        # support for gqa
+        num_head_groups = b_v.shape[-2] // hook_v.shape[-2]
+        hook_v = hook_v.repeat_interleave(num_head_groups, dim=-2)
+
         v = hook_v + b_v
         pattern = self._get_block(layer, "attn.hook_pattern")[batch_i].to(v.dtype)
         z = einsum(
@@ -298,6 +303,6 @@ class TransformerLensTransparentLlm(TransparentLlm):
             "head d_head d_model -> "
             "pos key_pos head d_model",
             z,
-            self._model.W_O[layer],
+            self._model.blocks[layer].attn.W_O,
         )
         return decomposed_attn
