@@ -56,8 +56,17 @@ def load_model(
     """
     assert _device in possible_devices()
 
-    causal_lm = None
-    tokenizer = None
+    if _model_path:
+        from transformers import AutoModelForCausalLM, AutoTokenizer
+        if _device == "gpu":
+            _device = "cuda:0"
+        causal_lm = AutoModelForCausalLM.from_pretrained(_model_path, 
+        torch_dtype=_dtype,
+        device_map=_device)
+        tokenizer = AutoTokenizer.from_pretrained(_model_path)
+    else:
+        causal_lm = None
+        tokenizer = None
 
     tl_lm = TransformerLensTransparentLlm(
         model_name=model_name,
