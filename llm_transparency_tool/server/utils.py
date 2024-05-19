@@ -62,7 +62,11 @@ def load_model(
     tokenizer = None
         
     if _model_path is not None: 
-        causal_lm = transformers.GPT2LMHeadModel.from_pretrained(_model_path)
+        causal_lm = transformers.AutoModelForCausalLM.from_pretrained(
+            _model_path, 
+            device_map="cuda" if _device == "gpu" else _device, 
+            torch_dtype=_dtype
+        )
         tokenizer = transformers.AutoTokenizer.from_pretrained(_model_path)
 
     tl_lm = TransformerLensTransparentLlm(

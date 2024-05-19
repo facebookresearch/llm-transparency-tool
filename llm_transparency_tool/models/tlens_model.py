@@ -15,6 +15,7 @@ from jaxtyping import Float, Int
 from typeguard import typechecked
 import streamlit as st
 
+from llm_transparency_tool.models.hash_funcs import HASH_FUNCS
 from llm_transparency_tool.models.load_custom_model import hf_model_to_hooked_transformer
 from llm_transparency_tool.models.transparent_llm import ModelInfo, TransparentLlm
 
@@ -27,13 +28,9 @@ class _RunInfo:
 
 
 @st.cache_resource(
-    max_entries=2,
+    max_entries=1,
     show_spinner=True,
-    hash_funcs={
-        transformers.PreTrainedModel: id,
-        transformers.PreTrainedTokenizer: id,
-        transformers.GPT2LMHeadModel: id
-    }
+    hash_funcs=HASH_FUNCS,
 )
 def load_hooked_transformer(
     model_name: str,
