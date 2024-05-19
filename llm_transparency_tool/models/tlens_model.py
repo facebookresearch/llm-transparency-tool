@@ -15,6 +15,8 @@ from jaxtyping import Float, Int
 from typeguard import typechecked
 import streamlit as st
 
+from llm_transparency_tool.models.hash_funcs import HASH_FUNCS
+from llm_transparency_tool.models.load_custom_model import hf_model_to_hooked_transformer
 from llm_transparency_tool.models.transparent_llm import ModelInfo, TransparentLlm
 
 
@@ -28,10 +30,7 @@ class _RunInfo:
 @st.cache_resource(
     max_entries=1,
     show_spinner=True,
-    hash_funcs={
-        transformers.PreTrainedModel: id,
-        transformers.PreTrainedTokenizer: id
-    }
+    hash_funcs=HASH_FUNCS,
 )
 def load_hooked_transformer(
     model_name: str,
@@ -43,16 +42,21 @@ def load_hooked_transformer(
     #     n_devices = torch.cuda.device_count()
     # else:
     #     n_devices = 1
-    tlens_model = transformer_lens.HookedTransformer.from_pretrained(
-        model_name,
-        hf_model=hf_model,
-        fold_ln=False,  # Keep layer norm where it is.
-        center_writing_weights=False,
-        center_unembed=False,
-        device=tlens_device,
-        # n_devices=n_devices,
-        dtype=dtype,
-    )
+    
+    if hf_model is not None:
+        tlens_model = hf_model_to_hooked_transformer(hf_model, tlens_device, dtype)
+    else:
+        tlens_model = transformer_lens.HookedTransformer.from_pretrained(
+            model_name,
+            hf_model=None,
+            fold_ln=False,  # Keep layer norm where it is.
+            center_writing_weights=False,
+            center_unembed=False,
+            device=tlens_device,
+            # n_devices=n_devices,
+            dtype=dtype,
+        )
+    
     tlens_model.eval()
     return tlens_model
 

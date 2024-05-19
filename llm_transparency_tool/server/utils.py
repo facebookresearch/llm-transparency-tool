@@ -56,8 +56,18 @@ def load_model(
     """
     assert _device in possible_devices()
 
+    # Load your custom model supported by TransformerLens, e.g., GPT2LMHeadModel from 
+    # HuggingFace from a file, and its tokenizer
     causal_lm = None
     tokenizer = None
+        
+    if _model_path is not None: 
+        causal_lm = transformers.AutoModelForCausalLM.from_pretrained(
+            _model_path, 
+            device_map="cuda" if _device == "gpu" else _device, 
+            torch_dtype=_dtype
+        )
+        tokenizer = transformers.AutoTokenizer.from_pretrained(_model_path)
 
     tl_lm = TransformerLensTransparentLlm(
         model_name=model_name,
