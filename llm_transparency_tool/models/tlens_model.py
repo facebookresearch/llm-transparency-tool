@@ -3,7 +3,8 @@
 #
 # This source code is licensed under the license found in the
 # LICENSE file in the root directory of this source tree.
-
+import os
+import json
 from dataclasses import dataclass
 from typing import List, Optional
 
@@ -15,8 +16,9 @@ from jaxtyping import Float, Int
 from typeguard import typechecked
 import streamlit as st
 
-from llm_transparency_tool.models.transparent_llm import ModelInfo, TransparentLlm
 
+from llm_transparency_tool.models.transparent_llm import ModelInfo, TransparentLlm
+from transformer_lens import HookedTransformer, HookedTransformerConfig
 
 @dataclass
 class _RunInfo:
@@ -33,16 +35,48 @@ class _RunInfo:
         transformers.PreTrainedTokenizer: id
     }
 )
+
+def load_from_local(path):
+    # check if config.json exists
+    # if not, return None
+    # if it does, load the model
+    # if not, return None
+    config_path = os.path.join(path, "config.json")
+    if not os.path.exists(config_path):
+        return None
+    
+    with open(config_path, "r") as f:
+        config = json.load(f)
+    
+    model_cfg = HookedTransformerConfig(**config)
+    hooked_model = HookedTransformer(model_cfg)
+
+    # find if there is a model file with suffix .pth, .pt or .bin
+    model_files = [f for f in os.listdir(path) if f.endswith(".pth") or f.endswith(".pt") or f.endswith(".bin")]
+    if len(model_files) == 0:
+        return None
+    model_file = model_files[0]
+    model_file_path = os.path.join(path, model_file)
+    hooked_model.load_state_dict(torch.load(model_file_path))
+    hooked_model.eval()
+    return hooked_model
+
 def load_hooked_transformer(
     model_name: str,
     hf_model: Optional[transformers.PreTrainedModel] = None,
     tlens_device: str = "cuda",
     dtype: torch.dtype = torch.float32,
+    path: Optional[str] = None,
 ):
     # if tlens_device == "cuda":
     #     n_devices = torch.cuda.device_count()
     # else:
     #     n_devices = 1
+
+    # load from local path if path is provided
+    if path is not None:
+        return load_from_local(path)
+        
     tlens_model = transformer_lens.HookedTransformer.from_pretrained(
         model_name,
         hf_model=hf_model,
@@ -60,7 +94,7 @@ def load_hooked_transformer(
 # TODO(igortufanov): If we want to scale the app to multiple users, we need more careful
 # thread-safe implementation. The simplest option could be to wrap the existing methods
 # in mutexes.
-class TransformerLensTransparentLlm(TransparentLlm):
+class   TransformerLensTransparentLlm(TransparentLlm):
     """
     Implementation of Transparent LLM based on transformer lens.
 
@@ -80,6 +114,7 @@ class TransformerLensTransparentLlm(TransparentLlm):
         tokenizer: Optional[transformers.PreTrainedTokenizer] = None,
         device: str = "gpu",
         dtype: torch.dtype = torch.float32,
+        path: Optional[str] = None,
     ):
         if device == "gpu":
             self.device = "cuda"
@@ -101,6 +136,7 @@ class TransformerLensTransparentLlm(TransparentLlm):
         self._run_exception = RuntimeError(
             "Tried to use the model output before calling the `run` method"
         )
+        self.path = path
 
     def copy(self):
         import copy
@@ -113,6 +149,7 @@ class TransformerLensTransparentLlm(TransparentLlm):
             hf_model=self.hf_model,
             tlens_device=self.device,
             dtype=self.dtype,
+            path=self.path
         )
 
         if self.hf_tokenizer is not None:

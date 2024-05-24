@@ -65,6 +65,7 @@ def load_model(
         tokenizer=tokenizer,
         device=_device,
         dtype=_dtype,
+        path=_model_path
     )
 
     return tl_lm
