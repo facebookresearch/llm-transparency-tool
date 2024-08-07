@@ -173,24 +173,25 @@ class App:
 
 
         if not self._config.demo_mode:
-            if self._config.allow_loading_dataset_files:
-                row_f = st_row.row([2, 1], vertical_align="bottom")
-                filename = row_f.text_input("Dataset", value=st.session_state.dataset_file or "")
-                if row_f.button("Load"):
-                    update_dataset(filename)
-            row_s = st_row.row([2, 1], vertical_align="bottom")
-            new_sentence = row_s.text_input("New sentence")
-            new_sentence_added = False
+            with st.sidebar.expander("Dataset", expanded=False):
+                if self._config.allow_loading_dataset_files:
+                    row_f = st_row.row([2, 1], vertical_align="bottom")
+                    filename = row_f.text_input("Dataset", value=st.session_state.dataset_file or "", label_visibility="collapsed")
+                    if row_f.button("Load"):
+                        update_dataset(filename)
+                row_s = st_row.row([2, 1], vertical_align="bottom")
+                new_sentence = row_s.text_area("New sentence", label_visibility="collapsed")
+                new_sentence_added = False
 
-            if row_s.button("Add"):
-                max_len = self._config.max_user_string_length
-                n = len(new_sentence)
-                if max_len is None or n <= max_len:
-                    st.session_state.dataset.append(new_sentence)
-                    new_sentence_added = True
-                    st.session_state.sentence_selector = new_sentence
-                else:
-                    st.warning(f"Sentence length {n} is larger than " f"the configured limit of {max_len}")
+                if row_s.button("Add"):
+                    max_len = self._config.max_user_string_length
+                    n = len(new_sentence)
+                    if max_len is None or n <= max_len:
+                        st.session_state.dataset.append(new_sentence)
+                        new_sentence_added = True
+                        st.session_state.sentence_selector = new_sentence
+                    else:
+                        st.warning(f"Sentence length {n} is larger than " f"the configured limit of {max_len}")
 
         sentences = st.session_state.dataset
         selection = st.selectbox(
@@ -407,7 +408,7 @@ class App:
         )
 
         st.dataframe(
-            top_df.style.map(pos_gain_color)
+            top_df.style.applymap(pos_gain_color)
             .background_gradient(
                 axis=0,
                 cmap=logits_color_map(positive_and_negative=n_bottom > 0),
@@ -508,11 +509,12 @@ class App:
             model_list = list(self._config.models)
             default_choice = model_list.index(self._config.default_model)
 
-            self.model_name = st.selectbox(
-                "Model",
+            self.supported_model_name = st.selectbox(
+                "Model name",
                 model_list,
                 index=default_choice,
             )
+            self.model_name = st.text_input("Custom model name", value=self.supported_model_name)
 
             if self.model_name:
                 self._stateful_model = load_model(
@@ -520,6 +522,7 @@ class App:
                     _model_path=self._config.models[self.model_name],
                     _device=self.device,
                     _dtype=self.dtype,
+                    supported_model_name=None if not self.supported_model_name else self.supported_model_name,
                 )
                 self.model_key = self.model_name  # TODO maybe something else?
                 self.draw_model_info()
@@ -623,8 +626,8 @@ class App:
 
     def run(self):
 
-        with st.sidebar.expander("About", expanded=True):
-            if self._config.demo_mode:
+        if self._config.demo_mode:
+            with st.sidebar.expander("About", expanded=True):
                 st.caption("""
                     The app is deployed in Demo Mode, thus only predefined models and inputs are available.\n
                     You can still install the app locally and use your own models and inputs.\n
