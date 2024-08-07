@@ -173,24 +173,25 @@ class App:
 
 
         if not self._config.demo_mode:
-            if self._config.allow_loading_dataset_files:
-                row_f = st_row.row([2, 1], vertical_align="bottom")
-                filename = row_f.text_input("Dataset", value=st.session_state.dataset_file or "")
-                if row_f.button("Load"):
-                    update_dataset(filename)
-            row_s = st_row.row([2, 1], vertical_align="bottom")
-            new_sentence = row_s.text_input("New sentence")
-            new_sentence_added = False
+            with st.sidebar.expander("Dataset", expanded=False):
+                if self._config.allow_loading_dataset_files:
+                    row_f = st_row.row([2, 1], vertical_align="bottom")
+                    filename = row_f.text_input("Dataset", value=st.session_state.dataset_file or "", label_visibility="collapsed")
+                    if row_f.button("Load"):
+                        update_dataset(filename)
+                row_s = st_row.row([2, 1], vertical_align="bottom")
+                new_sentence = row_s.text_area("New sentence", label_visibility="collapsed")
+                new_sentence_added = False
 
-            if row_s.button("Add"):
-                max_len = self._config.max_user_string_length
-                n = len(new_sentence)
-                if max_len is None or n <= max_len:
-                    st.session_state.dataset.append(new_sentence)
-                    new_sentence_added = True
-                    st.session_state.sentence_selector = new_sentence
-                else:
-                    st.warning(f"Sentence length {n} is larger than " f"the configured limit of {max_len}")
+                if row_s.button("Add"):
+                    max_len = self._config.max_user_string_length
+                    n = len(new_sentence)
+                    if max_len is None or n <= max_len:
+                        st.session_state.dataset.append(new_sentence)
+                        new_sentence_added = True
+                        st.session_state.sentence_selector = new_sentence
+                    else:
+                        st.warning(f"Sentence length {n} is larger than " f"the configured limit of {max_len}")
 
         sentences = st.session_state.dataset
         selection = st.selectbox(
