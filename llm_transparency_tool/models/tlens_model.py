@@ -180,10 +180,10 @@ class TransformerLensTransparentLlm(TransparentLlm):
             normalized = self._model.ln_final(tdim)
             result = self._model.unembed(normalized)
         else:
-            result = self._model.unembed(tdim)
+            result = self._model.unembed(tdim.to(self.dtype))
         return result[0][0]
 
-    def _get_block(self, layer: int, block_name: str) -> str:
+    def _get_block(self, layer: int, block_name: str) -> torch.Tensor:
         if not self._last_run:
             raise self._run_exception
         return self._last_run.cache[f"blocks.{layer}.{block_name}"]

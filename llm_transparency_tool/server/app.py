@@ -407,7 +407,7 @@ class App:
         )
 
         st.dataframe(
-            top_df.style.map(pos_gain_color)
+            top_df.style.applymap(pos_gain_color)
             .background_gradient(
                 axis=0,
                 cmap=logits_color_map(positive_and_negative=n_bottom > 0),
@@ -623,8 +623,8 @@ class App:
 
     def run(self):
 
-        with st.sidebar.expander("About", expanded=True):
-            if self._config.demo_mode:
+        if self._config.demo_mode:
+            with st.sidebar.expander("About", expanded=True):
                 st.caption("""
                     The app is deployed in Demo Mode, thus only predefined models and inputs are available.\n
                     You can still install the app locally and use your own models and inputs.\n
