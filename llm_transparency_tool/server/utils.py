@@ -49,6 +49,7 @@ def load_model(
     _device: str,
     _model_path: Optional[str] = None,
     _dtype: torch.dtype = torch.float32,
+    supported_model_name: Optional[str] = None,
 ) -> TransparentLlm:
     """
     Returns the loaded model along with its key. The key is just a unique string which
@@ -65,6 +66,7 @@ def load_model(
         tokenizer=tokenizer,
         device=_device,
         dtype=_dtype,
+        supported_model_name=supported_model_name,
     )
 
     return tl_lm

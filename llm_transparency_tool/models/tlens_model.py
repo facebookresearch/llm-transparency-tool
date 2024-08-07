@@ -16,6 +16,7 @@ from typeguard import typechecked
 import streamlit as st
 
 from llm_transparency_tool.models.transparent_llm import ModelInfo, TransparentLlm
+from transformer_lens.loading_from_pretrained import MODEL_ALIASES, get_official_model_name
 
 
 @dataclass
@@ -38,11 +39,15 @@ def load_hooked_transformer(
     hf_model: Optional[transformers.PreTrainedModel] = None,
     tlens_device: str = "cuda",
     dtype: torch.dtype = torch.float32,
+    supported_model_name: Optional[str] = None,
 ):
-    # if tlens_device == "cuda":
-    #     n_devices = torch.cuda.device_count()
-    # else:
-    #     n_devices = 1
+    if supported_model_name is None:
+        supported_model_name = model_name
+    supported_model_name = get_official_model_name(supported_model_name)
+    if model_name not in MODEL_ALIASES:
+        MODEL_ALIASES[supported_model_name] = []
+    if model_name not in MODEL_ALIASES[supported_model_name]:
+        MODEL_ALIASES[supported_model_name].append(model_name)
     tlens_model = transformer_lens.HookedTransformer.from_pretrained(
         model_name,
         hf_model=hf_model,
@@ -50,7 +55,6 @@ def load_hooked_transformer(
         center_writing_weights=False,
         center_unembed=False,
         device=tlens_device,
-        # n_devices=n_devices,
         dtype=dtype,
     )
     tlens_model.eval()
@@ -80,6 +84,7 @@ class TransformerLensTransparentLlm(TransparentLlm):
         tokenizer: Optional[transformers.PreTrainedTokenizer] = None,
         device: str = "gpu",
         dtype: torch.dtype = torch.float32,
+        supported_model_name: str = None,
     ):
         if device == "gpu":
             self.device = "cuda"
@@ -96,6 +101,7 @@ class TransformerLensTransparentLlm(TransparentLlm):
 
         # self._model = tlens_model
         self._model_name = model_name
+        self._supported_model_name = supported_model_name
         self._prepend_bos = True
         self._last_run = None
         self._run_exception = RuntimeError(
@@ -113,6 +119,7 @@ class TransformerLensTransparentLlm(TransparentLlm):
             hf_model=self.hf_model,
             tlens_device=self.device,
             dtype=self.dtype,
+            supported_model_name=self._supported_model_name,
         )
 
         if self.hf_tokenizer is not None:

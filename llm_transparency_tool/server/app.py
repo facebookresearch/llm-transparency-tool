@@ -508,11 +508,12 @@ class App:
             model_list = list(self._config.models)
             default_choice = model_list.index(self._config.default_model)
 
-            self.model_name = st.selectbox(
-                "Model",
+            self.supported_model_name = st.selectbox(
+                "Model name",
                 model_list,
                 index=default_choice,
             )
+            self.model_name = st.text_input("Custom model name", value=self.supported_model_name)
 
             if self.model_name:
                 self._stateful_model = load_model(
@@ -520,6 +521,7 @@ class App:
                     _model_path=self._config.models[self.model_name],
                     _device=self.device,
                     _dtype=self.dtype,
+                    supported_model_name=None if not self.supported_model_name else self.supported_model_name,
                 )
                 self.model_key = self.model_name  # TODO maybe something else?
                 self.draw_model_info()
