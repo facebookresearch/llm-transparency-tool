@@ -5,6 +5,12 @@
     "models": {
         "": null,
 
+        "meta-llama/Meta-Llama-3-8B": null,
+        "meta-llama/Meta-Llama-3-70B": null,
+        "meta-llama/Meta-Llama-3-8B-Instruct": null,
+        "meta-llama/Meta-Llama-3-70B-Instruct": null,
+        "mistral/mixtral-instruct": null,
+
         "gpt2": null,
         "distilgpt2": null,
         "facebook/opt-125m": null,
@@ -24,6 +30,9 @@
 
         "meta-llama/Llama-2-13b-hf": null,
         "meta-llama/Llama-2-13b-chat-hf": null,
+
+        "meta-llama/Llama-2-70b-hf": null,
+        "meta-llama/Llama-2-70b-chat-hf": null,
 
 
         "gpt2-medium": null,
