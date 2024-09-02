@@ -92,7 +92,7 @@ class TransparentLlm(ABC):
     def residual_in(self, layer: int) -> Float[torch.Tensor, "batch pos d_model"]:
         """
         The state of the residual stream before entering the layer. For example, when
-        layer == 0 these must the embedded tokens (including positional embedding).
+        layer == 0 these must be the embedded tokens (including positional embedding).
         """
         pass
 
