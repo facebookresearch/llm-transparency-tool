@@ -194,7 +194,10 @@ def apply_threshold_and_renormalize(
     c_blocks = c_blocks * (c_blocks > threshold)
     c_residual = c_residual * (c_residual > threshold)
 
-    denom = c_residual + c_blocks.sum(dim=tuple(range(resid_dims, block_dims)))
+    if bound_dims > 0:
+        denom = c_residual + c_blocks.sum(dim=tuple(range(resid_dims, block_dims)))
+    else:
+        denom = c_residual + c_blocks
     return (
         c_blocks / denom.reshape(denom.shape + (1,) * bound_dims),
         c_residual / denom,
